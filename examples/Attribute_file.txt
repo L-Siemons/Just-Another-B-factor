@@ -1,4 +1,4 @@
-#T-Lysosyme    ;Name          #Name of the selection
+#5k9p   ;Name          #Name of the selection
 #;chain ;residue ;atom_name ;atom_id ;attribute_value
 A 1 - - 0.0
 A - - - 0.5
