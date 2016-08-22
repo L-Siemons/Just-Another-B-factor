@@ -1,11 +1,13 @@
 
 import sys
-from pymol import cmd
+
 import file_utils as fu
 import prot_classes as prot
 import math
 import numpy as np
 import pkg_resources
+
+
 
 def get_RGB_codes(min, max, scale):
     
