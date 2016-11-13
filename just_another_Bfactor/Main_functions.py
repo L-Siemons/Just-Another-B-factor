@@ -35,7 +35,7 @@ def get_RGB_codes(min, max, scale):
         scaled_rgb.append(min[indx] + scaled_range)
     return scaled_rgb
 
-def select_colouring(record, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max):
+def select_colouring(record, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max, col):
     
     '''
     Since the colour bar we ae using has tso colour transitions this function adds some ligic to
@@ -51,7 +51,7 @@ def select_colouring(record, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max):
 
     '''
     
-    atri = record[4]
+    atri = record[col]
     print '----------'
     #here we have scaled the difference to be between 0 and 1
     scaled_atri = np.divide(atri - scale_min, scale_diff)
@@ -75,7 +75,7 @@ def select_colouring(record, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max):
     return record_rgb
         
     
-def ColourAtri(prot_atri_file, model='', minColour='Blue', maxColour='Red', midColour='White',
+def ColourAtri(prot_atri_file, col='4',model='', minColour='Blue', maxColour='Red', midColour='White',
                 scale='auto', colour_path='defult', place_holder= '-'):
     
     '''
@@ -102,7 +102,7 @@ def ColourAtri(prot_atri_file, model='', minColour='Blue', maxColour='Red', midC
     
     '''
 
-        
+    col = int(col)   
     #get the dict of colours
     colours = fu.get_colours(colour_path)
     
@@ -118,8 +118,8 @@ def ColourAtri(prot_atri_file, model='', minColour='Blue', maxColour='Red', midC
     
     if scale == 'auto':
         #use floor and ceil to give interger bounds for the scale 
-        scale_min = float(math.floor(min(item[4] for item in combined_list)))
-        scale_max = float(math.ceil(max(item[4] for item in combined_list)))
+        scale_min = float(math.floor(min(item[col] for item in combined_list)))
+        scale_max = float(math.ceil(max(item[col] for item in combined_list)))
     
     else:
         print 'scale given by user'
@@ -136,7 +136,7 @@ def ColourAtri(prot_atri_file, model='', minColour='Blue', maxColour='Red', midC
     if chain_atri:
         for i in chain_atri:
             colour_count = colour_count + 1
-            rgb_code = select_colouring(i, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max)
+            rgb_code = select_colouring(i, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max,col)
             
             
             if model != '':
@@ -152,7 +152,7 @@ def ColourAtri(prot_atri_file, model='', minColour='Blue', maxColour='Red', midC
     if res_atri:
         for i in res_atri:
             colour_count = colour_count + 1
-            rgb_code = select_colouring(i, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max)
+            rgb_code = select_colouring(i, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max,col)
                 
             name = ''
                 
@@ -174,7 +174,7 @@ def ColourAtri(prot_atri_file, model='', minColour='Blue', maxColour='Red', midC
     if atom_atri:
         for i in atom_atri:
             colour_count = colour_count + 1
-            rgb_code = select_colouring(i, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max)
+            rgb_code = select_colouring(i, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max, col)
             
             name = ''
             

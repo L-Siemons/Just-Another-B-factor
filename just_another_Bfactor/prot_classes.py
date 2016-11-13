@@ -9,7 +9,6 @@ class protein_atri:
     
     '''
     - this class is here to deal with the protein's attribute
-    - currently it only has the colouring attribute implimented
     the argument it takes is:
     
     atri_file - the path to the attribute file
@@ -18,7 +17,11 @@ class protein_atri:
     
     def __init__(self, atri_file, place_holder='-'):
         #see above for atri_file
-        self.atri = fu.read_attributes(atri_file)
+        
+        records, names = fu.read_attributes(atri_file)
+        self.atri = records
+        self.record_names = names
+        
         
     def seperate_atributes(self, place_holder='-'):
     
@@ -27,16 +30,17 @@ class protein_atri:
         chains, residues and single atoms
         
         
-        
         '''
         
         #this function gives attirbutes whish are assigned to the whole chain
         chain = []
         res = []
         atoms = [] 
-    
+        
+        print self.atri[0]
+
+     
         for entry in self.atri:
-            
             #this pulls out the entires with only chains
             if entry[1] == place_holder and entry[2] == place_holder and entry[3] == place_holder:
                 chain.append(entry)

@@ -30,15 +30,58 @@ def remove_comments(line, comment_ind='#'):
 
 #--------------------------------------------------------------
 
+def determine_section(line, section_start, section_end, message,mark):
+    ''' 
+    This gives true or false depending on whether you are between the headers or not
+    section_start - the line that denotes the start of a section
+    section_end - the line that denotes the end of a section
+    messgae - a printed message.
+    '''
+    
+    if section_start in line:
+        mark = True
+        print message
+    elif line == section_end:
+        mark = False
+    else:
+        mark = mark
+    return mark
+
+ 
+#--------------------------------------------------------------
+
+def get_titles(line, section_header):
+
+    '''
+    This function takes the line with the [section_title]
+    and returns the user defined titles. 
+    
+    These are only there for reference
+    
+    line - line currently being parsed
+    seciton_header - denotes the seciotn se want to look at
+    
+    note there should be no white space within a title
+    
+    '''
+    if section_header in line:
+        split = line.split(section_header)
+        names = split[1].split()
+        return names
+
+#--------------------------------------------------------------
+
 def read_attributes(file_name, place_holder='-'):
     
     ''' 
     This funtion reads in the Attribute file and returns a list 
-    protein = [ [chain,residue,atom_name, id, atribute], ... ] is the structure of the 
+    protein = [ [chain,residue,atom_name, id, atribute1, atribute2, ...], ... ] is the structure of the 
     list
     
-     place_holder - denotes empty feilds in the input file
-     file_name - path to the file + name
+    also returns the names of the atributes
+    
+    place_holder - denotes empty feilds in the input file
+    file_name - path to the file + name
         
     ''' 
         
@@ -49,34 +92,60 @@ def read_attributes(file_name, place_holder='-'):
     empty_records = []
     ambig = []
     
+    #define the markers for reading in sections of the input file
+    reading_colour_section = False
+    
     for line in atri_file:
         try:
             #this removes the comments 
             info = remove_comments(line)
-        
-            #this gives the difference fields
-            fields = info.split()        
-            chain = fields[0]
-            res = fields[1]
-            atom_name = fields[2]
-            atom_id = fields[3]
-            atri = fields[4]
+            
+            #this bit of logic tells us if we are in the 'colour section'
+            reading_colour_section = determine_section(line,'[colour]','[colour_end]\n', 
+                                                       'reading in atributes for colouring',
+                                                       reading_colour_section)
+            if '[colour]' in line:
+                headers = get_titles(line, '[colour]')
+            
+            
+            if reading_colour_section == True:
+                #this gives the difference fields
 
-            if atom_id == place_holder:
-                if res == place_holder:
-                    if atom_name != place_holder:
-                        #this checks for records which have an atom name but no res
-                        ambig.append(line)
+                fields = info.split()        
+                chain = fields[0]
+                res = fields[1]
+                atom_name = fields[2]
+                atom_id = fields[3]
+                atri = []
+                record = []
+                #now we dont know how many atributes there are
+                for entry in range(4,len(fields),1):
+                    atri.append(float(fields[entry]))
+                    
+                
+                
+                
+                if atom_id == place_holder:
+                    if res == place_holder:
+                        if atom_name != place_holder:
+                            #this checks for records which have an atom name but no res
+                            ambig.append(line)
                 
 
-                if chain == place_holder:
-                    if res == place_holder:
-                        if atom_name == place_holder:
-                            #collects the empty records
-                            empty_records.append(line)
+                    if chain == place_holder:
+                        if res == place_holder:
+                            if atom_name == place_holder:
+                                #collects the empty records
+                                empty_records.append(line)
             
-            protein.append([chain, res, atom_name, atom_id, float(atri)])
-        
+                record.extend([chain, res, atom_name, atom_id])
+                #multiple atri values to append now
+                for i in atri:
+                    record.append(i)
+                    
+                #add the record to the entires
+                protein.append(record)
+                
         except IndexError:
             pass
         
@@ -95,7 +164,7 @@ def read_attributes(file_name, place_holder='-'):
         raise Exception(error_msg)
     
     atri_file.close()
-    return protein
+    return protein, headers
     
 #--------------------------------------------------------------
 
@@ -103,11 +172,11 @@ def get_colours(colour_file):
     
     '''
     This function reads in all the colours and their RGB codes
-    and makes a dictionary 
+    and makes a dictionary from the resoure file resources/colours.dat
     
     colour[name] = (r,g,b)
     
-    colour_file - path to the file
+    colour_file or data_path - path to the file
     
     '''
     #this should give the right path to the resource file
