@@ -1,0 +1,6 @@
+#5k9p   ;Name          #Name of the selection
+[colour] Hello_world hello2
+#;chain ;residue ;atom_name ;atom_id ;attribute_value
+A 1 - 2 0.0 0.5
+A - - - 0.5 0.1
+[colour_end]

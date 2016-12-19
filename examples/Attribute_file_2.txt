@@ -1,5 +1,6 @@
 #5k9p    ;Name          #Name of the selection
 #;chain ;residue ;atom_name ;atom_id ;attribute_value
-A - - - 4.5
-A 10 - - -4.5
-A 10 CA - 0
+[colour] Hello_world
+A 1 - - 0.0 1.0
+A - - - 0.5 1.0
+[colour_end]

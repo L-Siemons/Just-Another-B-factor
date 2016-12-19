@@ -1,6 +1,5 @@
-
+from pymol import cmd
 import sys
-
 import file_utils as fu
 import prot_classes as prot
 import math
@@ -52,12 +51,12 @@ def select_colouring(record, scale_min, scale_diff, rgb_min, rgb_mid,rgb_max, co
     '''
     
     atri = record[col]
-    print '----------'
+    #print '----------'
     #here we have scaled the difference to be between 0 and 1
     scaled_atri = np.divide(atri - scale_min, scale_diff)
             
     #if less than the half way we colour between min and mid 
-    print scaled_atri
+    #print scaled_atri
     if scaled_atri < 0.5:
         record_rgb = get_RGB_codes(rgb_min, rgb_mid, (scaled_atri*2))
             
@@ -115,7 +114,7 @@ def ColourAtri(prot_atri_file, col='4',model='', minColour='Blue', maxColour='Re
     
     #so here we get the range of the scale
     combined_list = chain_atri + res_atri + atom_atri 
-    
+    #print '============================'
     if scale == 'auto':
         #use floor and ceil to give interger bounds for the scale 
         scale_min = float(math.floor(min(item[col] for item in combined_list)))
@@ -131,8 +130,8 @@ def ColourAtri(prot_atri_file, col='4',model='', minColour='Blue', maxColour='Re
     
     colour_count = 0
 
-
-   #colour the chains
+    #print '-------------------------------'
+    #colour the chains
     if chain_atri:
         for i in chain_atri:
             colour_count = colour_count + 1
@@ -147,8 +146,7 @@ def ColourAtri(prot_atri_file, col='4',model='', minColour='Blue', maxColour='Re
             #apparently we need to name the colour before we can use it
             cmd.set_color('work'+str(colour_count),rgb_code)
             cmd.color('work'+str(colour_count), chain_name)
-
-            
+    
     if res_atri:
         for i in res_atri:
             colour_count = colour_count + 1
