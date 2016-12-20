@@ -165,7 +165,48 @@ def read_attributes(file_name, place_holder='-'):
     
     atri_file.close()
     return protein, headers
+
+def read_sticks(file):
+
+    '''
+    This function reads in the stics section 
+    of the atribute file. This is marked by 
     
+    [sticks] and [sticks_end]
+    
+    it resturns the dict atom_pairs[atom1, atom2] = width
+    and the names of the different possible selections
+    
+    '''
+
+    atri_file = open(file, 'r')
+    names = []
+    atom_pairs = {}
+    reading_sticks_section = False
+    headers = 'N/A'
+    for i in atri_file.readlines():
+        #this bit of logic tells us if we are in the 'colour section'
+        reading_sticks_section = determine_section(i,'[sticks]','[sticks_end]\n', 
+                                                       'reading in sticks for colouring',
+                                                       reading_sticks_section)
+        if '[sticks]' in i:
+            headers = get_titles(i, '[sticks]')
+        
+        if reading_sticks_section == True:
+            if 'sticks' not in i:
+                feilds = i.split(':')
+                name = feilds[0].split("'")[1]
+                
+                if name not in names:
+                    names.append(name)
+                atom1 = feilds[1]
+                atom2 = feilds[2]
+                width = feilds[3]
+                atom_pairs[name, atom1, atom2] = width
+
+        
+    return atom_pairs, names
+
 #--------------------------------------------------------------
 
 def get_colours(colour_file):

@@ -4,3 +4,7 @@
 A 1 - 2 0.0 0.5
 A - - - 0.5 0.1
 [colour_end]
+[sticks]
+name : resi 1 and name CA : resi 1 and name CB : 0.9
+name : resi 1 and name CA : resi 1 and name CG : 0.1
+[sticks_end]

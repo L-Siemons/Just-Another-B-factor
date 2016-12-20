@@ -155,3 +155,8 @@ A 151 - - 149.006622517
 A 152 - - 150.006578947
 A 153 - - 151.006535948
 [colour_end]
+[sticks]
+'name' : resi 1 and name CA : resi 10 and name CA : 0.9
+'name' : resi 10 and name CA : resi 15 and name CA : 0.1
+[sticks_end]
+

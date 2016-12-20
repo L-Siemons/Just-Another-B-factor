@@ -18,9 +18,13 @@ class protein_atri:
     def __init__(self, atri_file, place_holder='-'):
         #see above for atri_file
         
-        records, names = fu.read_attributes(atri_file)
+        records, ColourNames = fu.read_attributes(atri_file)
         self.atri = records
-        self.record_names = names
+        self.record_names = ColourNames
+        
+        sticks, names = fu.read_sticks(atri_file)
+        self.sticks = sticks
+        self.stickNames = names
         
         
     def seperate_atributes(self, place_holder='-'):

@@ -199,7 +199,38 @@ def ColourAtri(prot_atri_file, col='4',model='', minColour='Blue', maxColour='Re
             cmd.set_color('work'+str(colour_count),rgb_code)
             cmd.color('work'+str(colour_count), name)
         
-#cmd.extend("ColourAtri",ColourAtri())     
-        
+def drawSticks(atri_file, name='name'):
 
- 
+    '''
+    
+    This takes the [sticks] seciotn of the atribute file and 
+    and creates bonds between the specified atoms and draws sticks of the 
+    specified width.
+    
+    note that the width takes alues between 0 and 1
+    
+    '''  
+        
+    protein = prot.protein_atri(atri_file)
+    sticks = protein.sticks
+    
+    total_sticks = ''
+    for i in sticks.keys():
+        
+        if i[0] == name:
+            #make bond 
+            #print i[1], i[2]
+            cmd.bond(i[1], i[2])
+            #set width 
+            sel = '(' + i[1] + ') or (' + i[2]+')'
+            if total_sticks != '':
+                total_sticks = total_sticks  + ' or ' + sel
+            else:
+                total_sticks = sel   
+            cmd.set('stick_radius', str(sticks[i]), sel)
+            #then show
+    
+    cmd.show('sticks', total_sticks)
+    
+    
+    
